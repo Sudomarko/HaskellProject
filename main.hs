@@ -5,8 +5,17 @@
 -- Language implementation: Glorious Glasgow Haskell Compilation System, version 8.4.3
 import System.IO (isEOF)
 import Data.Char()
+import Text.Read()
+import Control.Monad.State
 
 -- Datatype for tautolgy symbol
+data Taut = Taut {iniChar :: Char, name :: String} deriving (Show)
+
+-- Datatype for Stack Function and Monad
+
+-- Stack functionality
+
+-- END OF FUNC GROUP
 
 
 main :: IO ()
@@ -22,81 +31,101 @@ scanInput = do
     else do
       line <- getLine
       char_arr <- mapM disjunctionOp line
-      mapM_ print char_arr
-
-
-      putStrLn "\nEnd of Line"
+      check_t <- checkTaut char_arr
+      mapM_ print check_t
+      putStrLn "End of Line"
       scanInput
 
 -- Char passes through, checks if disjunction, if not passes onto implicationOp, else returns
-disjunctionOp :: Char -> IO (Char, String)
+disjunctionOp :: Char ->  IO (Taut)
 disjunctionOp inChar = do
   if inChar == 'A'
     then do
-      return (inChar, "disjunction")
-
+      let resol = Taut {iniChar=inChar, name="disjunction"}
+      return resol
     else do
-      res <- implicationOp inChar
-      return res
+      resol <- implicationOp inChar
+      return resol
 
-implicationOp :: Char -> IO (Char, String)
+implicationOp :: Char -> IO (Taut)
 implicationOp inChar = do
   if inChar == 'C'
     then do
-      return (inChar, "implication")
+      let reso = Taut {iniChar=inChar, name="implication"}
+      return reso
     else do
-      res <- nandOp inChar
-      return res
+      reso <- nandOp inChar
+      return reso
 
-nandOp :: Char -> IO (Char, String)
+nandOp :: Char -> IO (Taut)
 nandOp inChar = do
   if inChar == 'D'
     then do
-      return (inChar, "nand")
+      let reso = Taut {iniChar=inChar, name="nand"}
+      return reso
     else do
-      res <- equivalenceOp inChar
-      return res
+      reso <- equivalenceOp inChar
+      return reso
 
-equivalenceOp :: Char -> IO (Char, String)
+equivalenceOp :: Char -> IO (Taut)
 equivalenceOp inChar = do
   if inChar == 'E'
     then do
-      return (inChar, "equivalence")
+      let reso = Taut {iniChar=inChar, name="equivalence"}
+      return reso
     else do
-      res <- xorOp inChar
-      return res
+      reso <- xorOp inChar
+      return reso
 
-xorOp :: Char -> IO (Char, String)
+xorOp :: Char -> IO (Taut)
 xorOp inChar = do
   if inChar == 'J'
     then do
-      return (inChar, "xor")
+      let reso = Taut {iniChar=inChar, name="xor"}
+      return reso
     else do
-      res <- conjunctionOp inChar
-      return res
+      reso <- conjunctionOp inChar
+      return reso
 
-conjunctionOp :: Char -> IO (Char, String)
+conjunctionOp :: Char -> IO (Taut)
 conjunctionOp inChar = do
   if inChar == 'K'
     then do
-      return (inChar, "conjunction")
+      let reso = Taut {iniChar=inChar, name="conjunction"}
+      return reso
     else do
-      res <- unaryNegationOp inChar
-      return res
+      reso <- unaryNegationOp inChar
+      return reso
 
-unaryNegationOp :: Char -> IO (Char, String)
+unaryNegationOp :: Char -> IO (Taut)
 unaryNegationOp inChar = do
-  if inChar == 'N'
+  if (inChar == 'N')
     then do
-      return (inChar, "unary negation")
+      let res = Taut {iniChar=inChar, name="unary negation"}
+      return res
     else do
       res <- objectOp inChar
       return res
 
-objectOp :: Char -> IO (Char, String)
+
+objectOp :: Char -> IO (Taut)
 objectOp inChar  = do
-    return (inChar, "object")
+    let reso = Taut {iniChar=inChar, name="object"}
+    return reso
 
 -- END OF FUNC GROUP
 
 -- Check if a tautology
+
+-- Input: List of Tautologies, Output: Rearanged List Of Tautologies
+-- Take in input, split the objects from everything else into two stacks
+-- pop object stack into new list, pop tautolgy stack into new list
+-- repeat until stacks empty
+-- if both stacks not empty at same time, return false 
+
+checkTaut :: [Taut] -> [Taut]
+checkTaut (x:xs) = do
+  res <- (x:xs)
+  return res
+
+-- END OF FUNC GROUP
